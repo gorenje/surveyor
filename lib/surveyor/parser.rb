@@ -7,8 +7,9 @@ module Surveyor
     # Class methods
     def self.parse(str)
       puts
-      Surveyor::Parser.new.parse(str)
+      survey = Surveyor::Parser.new.parse(str)
       puts
+      survey
     end
 
     # Instance methods
@@ -31,14 +32,14 @@ module Surveyor
       raise "Error: Dropping the #{type.humanize} block like it's hot!" if !block_models.include?(type) && block_given?
       
       # parse and build
-      type.classify.constantize.parse_and_build(context, args, method_name, reference_identifier)
-      
+      object = type.classify.constantize.parse_and_build(context, args, method_name, reference_identifier)
       # evaluate and clear context for block models
       if block_models.include?(type)
         self.instance_eval(&block) 
         if type == 'survey'
           puts
           print context[type.to_sym].save ? "saved. " : " not saved! #{context[type.to_sym].errors.each_full{|x| x }.join(", ")} "
+          return object
         end
         context[type.to_sym].clear(context) unless type == 'survey'
       end
