@@ -19,9 +19,10 @@ module Surveyor
         base.instance_eval do
           def applicable_attributes(attrs)
             result = HashWithIndifferentAccess.new(attrs)
-            if result[:string_value] && Answer.exists?(result[:answer_id])
+            result[:answer_id] = result[:answer_id].compact.delete_if(&:blank?) if result[:answer_id].is_a?(Array)
+            if result[:answer_id].present? && result[:string_value] && Answer.exists?(result[:answer_id])
               answer = Answer.find(result[:answer_id])
-              result.delete(:string_value) unless answer.response_class && answer.response_class.to_sym == :string
+              result.delete(:string_value) unless answer.is_a?(Array)&&answer.response_class && answer.response_class.to_sym == :string
             end
             result
           end
