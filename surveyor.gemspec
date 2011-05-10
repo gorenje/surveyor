@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{surveyor}
-  s.version = "0.16.5"
+  s.version = "0.16.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Chamberlain", "Mark Yoon"]
@@ -37,8 +37,8 @@ Gem::Specification.new do |s|
      "app/models/survey_section_sweeper.rb",
      "app/models/validation.rb",
      "app/models/validation_condition.rb",
-     "app/views/layouts/results.html.erb",
-     "app/views/layouts/surveyor_default.html.erb",
+     "app/views/layouts/results.html.haml",
+     "app/views/layouts/surveyor_default.html.haml",
      "app/views/partials/_answer.html.haml",
      "app/views/partials/_dependents.html.haml",
      "app/views/partials/_question.html.haml",
@@ -89,12 +89,23 @@ Gem::Specification.new do |s|
      "lib/generators/surveyor/templates/db/migrate/create_surveys.rb",
      "lib/generators/surveyor/templates/db/migrate/create_validation_conditions.rb",
      "lib/generators/surveyor/templates/db/migrate/create_validations.rb",
+     "lib/generators/surveyor/templates/public/images/surveyor/back_disabled.jpg",
+     "lib/generators/surveyor/templates/public/images/surveyor/back_enabled.jpg",
+     "lib/generators/surveyor/templates/public/images/surveyor/forward_disabled.jpg",
+     "lib/generators/surveyor/templates/public/images/surveyor/forward_enabled.jpg",
      "lib/generators/surveyor/templates/public/images/surveyor/next.gif",
      "lib/generators/surveyor/templates/public/images/surveyor/prev.gif",
+     "lib/generators/surveyor/templates/public/images/surveyor/sort_asc.png",
+     "lib/generators/surveyor/templates/public/images/surveyor/sort_asc_disabled.png",
+     "lib/generators/surveyor/templates/public/images/surveyor/sort_both.png",
+     "lib/generators/surveyor/templates/public/images/surveyor/sort_desc.png",
+     "lib/generators/surveyor/templates/public/images/surveyor/sort_desc_disabled.png",
+     "lib/generators/surveyor/templates/public/javascripts/surveyor/jquery.dataTables.min.js",
      "lib/generators/surveyor/templates/public/javascripts/surveyor/jquery.surveyor.js",
      "lib/generators/surveyor/templates/public/javascripts/surveyor/jquery.tools.min.js",
      "lib/generators/surveyor/templates/public/stylesheets/sass/surveyor.sass",
      "lib/generators/surveyor/templates/public/stylesheets/surveyor/dateinput.css",
+     "lib/generators/surveyor/templates/public/stylesheets/surveyor/demo_table.css",
      "lib/generators/surveyor/templates/public/stylesheets/surveyor/reset.css",
      "lib/generators/surveyor/templates/public/stylesheets/surveyor/results.css",
      "lib/generators/surveyor/templates/surveys/EXTENDING_SURVEYOR.md",
