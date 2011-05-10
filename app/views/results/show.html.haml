@@ -11,6 +11,6 @@
       %td= h r_set.access_code
       - @questions.each do |question|
         - next if question.display_order == 1
-        %td= display_response(r_set,question)
+        %td!= display_response(r_set,question)
 %br/
 = link_to "Back", results_path
