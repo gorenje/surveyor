@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
      "lib/generators/surveyor/templates/config/locales/surveyor_en.yml",
      "lib/generators/surveyor/templates/config/locales/surveyor_es.yml",
      "lib/generators/surveyor/templates/config/locales/surveyor_he.yml",
+     "lib/generators/surveyor/templates/db/migrate/add_api_ids.rb",
      "lib/generators/surveyor/templates/db/migrate/add_correct_answer_id_to_questions.rb",
      "lib/generators/surveyor/templates/db/migrate/add_default_value_to_answers.rb",
      "lib/generators/surveyor/templates/db/migrate/add_display_order_to_surveys.rb",
@@ -176,21 +177,24 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<formtastic>, [">= 0"])
       s.add_runtime_dependency(%q<haml>, [">= 0"])
-      s.add_runtime_dependency(%q<formtastic>, [">= 0"])
       s.add_runtime_dependency(%q<fastercsv>, [">= 0"])
+      s.add_runtime_dependency(%q<formtastic>, [">= 0"])
+      s.add_runtime_dependency(%q<uuid>, [">= 0"])
+      s.add_development_dependency(%q<yard>, [">= 0"])
     else
-      s.add_dependency(%q<formtastic>, [">= 0"])
       s.add_dependency(%q<haml>, [">= 0"])
-      s.add_dependency(%q<formtastic>, [">= 0"])
       s.add_dependency(%q<fastercsv>, [">= 0"])
+      s.add_dependency(%q<formtastic>, [">= 0"])
+      s.add_dependency(%q<uuid>, [">= 0"])
+      s.add_dependency(%q<yard>, [">= 0"])
     end
   else
-    s.add_dependency(%q<formtastic>, [">= 0"])
     s.add_dependency(%q<haml>, [">= 0"])
-    s.add_dependency(%q<formtastic>, [">= 0"])
     s.add_dependency(%q<fastercsv>, [">= 0"])
+    s.add_dependency(%q<formtastic>, [">= 0"])
+    s.add_dependency(%q<uuid>, [">= 0"])
+    s.add_dependency(%q<yard>, [">= 0"])
   end
 end
 
