@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Chamberlain", "Mark Yoon"]
-  s.date = %q{2011-03-18}
+  s.date = %q{2011-05-10}
   s.email = %q{yoon@northwestern.edu}
   s.extra_rdoc_files = [
     "README.md"
@@ -58,6 +58,7 @@ Gem::Specification.new do |s|
      "features/support/REDCapDemoDatabase_DataDictionary.csv",
      "features/support/env.rb",
      "features/support/paths.rb",
+     "features/support/redcap_siblings.csv",
      "features/surveyor.feature",
      "features/surveyor_parser.feature",
      "init_testbed.rakefile",
@@ -176,13 +177,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<haml>, [">= 0"])
+      s.add_runtime_dependency(%q<formtastic>, [">= 0"])
       s.add_runtime_dependency(%q<fastercsv>, [">= 0"])
     else
       s.add_dependency(%q<haml>, [">= 0"])
+      s.add_dependency(%q<formtastic>, [">= 0"])
       s.add_dependency(%q<fastercsv>, [">= 0"])
     end
   else
     s.add_dependency(%q<haml>, [">= 0"])
+    s.add_dependency(%q<formtastic>, [">= 0"])
     s.add_dependency(%q<fastercsv>, [">= 0"])
   end
 end
