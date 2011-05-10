@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{surveyor}
-  s.version = "0.16.4"
+  s.version = "0.16.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Chamberlain", "Mark Yoon"]
@@ -45,8 +45,8 @@ Gem::Specification.new do |s|
      "app/views/partials/_question_group.html.haml",
      "app/views/partials/_section.html.haml",
      "app/views/partials/_section_menu.html.haml",
-     "app/views/results/index.html.erb",
-     "app/views/results/show.html.erb",
+     "app/views/results/index.html.haml",
+     "app/views/results/show.html.haml",
      "app/views/surveyor/edit.html.haml",
      "app/views/surveyor/new.html.haml",
      "app/views/surveyor/show.html.haml",
