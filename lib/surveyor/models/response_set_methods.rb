@@ -7,20 +7,20 @@ module Surveyor
         base.send :belongs_to, :user
         base.send :has_many, :responses, :dependent => :destroy
         base.send :accepts_nested_attributes_for, :responses, :allow_destroy => true
-        
+
         @@validations_already_included ||= nil
         unless @@validations_already_included
           # Validations
           base.send :validates_presence_of, :survey_id
           base.send :validates_associated, :responses
           base.send :validates_uniqueness_of, :access_code
-          
+
           @@validations_already_included = true
         end
 
         # Attributes
         base.send :attr_protected, :completed_at
-        
+
         # Class methods
         base.instance_eval do
           def reject_or_destroy_blanks(hash_of_hashes)
@@ -35,8 +35,11 @@ module Surveyor
             end
             result
           end
+
           def has_blank_value?(hash)
-            hash["answer_id"].blank? or hash.any?{|k,v| v.is_a?(Array) ? v.all?{|x| x.to_s.blank?} : v.to_s.blank?}
+            hash["answer_id"].blank? or hash.any? do |k,v|
+              v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank?
+            end
           end
         end
       end
@@ -75,7 +78,7 @@ module Surveyor
       def complete!
         self.completed_at = Time.now
       end
-      
+
       def complete?
         !completed_at.nil?
       end
@@ -120,11 +123,11 @@ module Surveyor
       def unanswered_dependencies
         unanswered_question_dependencies + unanswered_question_group_dependencies
       end
-      
+
       def unanswered_question_dependencies
         dependencies.select{|d| d.is_met?(self) and d.question and self.is_unanswered?(d.question)}.map(&:question)
       end
-      
+
       def unanswered_question_group_dependencies
         dependencies.select{|d| d.is_met?(self) and d.question_group and self.is_group_unanswered?(d.question_group)}.map(&:question_group)
       end

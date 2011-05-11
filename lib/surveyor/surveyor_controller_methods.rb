@@ -45,8 +45,8 @@ module Surveyor
       if @response_set
         @survey = Survey.with_sections.find_by_id(@response_set.survey_id)
         @sections = @survey.sections
-        if params[:section]  
-          @section = @sections.with_includes.find(section_id_from(params[:section])) || @sections.with_includes.first 
+        if params[:section]
+          @section = @sections.with_includes.find(section_id_from(params[:section])) || @sections.with_includes.first
         else
           @section = @sections.with_includes.first
         end
@@ -58,21 +58,30 @@ module Surveyor
     end
 
     def update
-      @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => :answer}, :lock => true)
-      return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
+      @response_set = ResponseSet.
+        find_by_access_code(params[:response_set_code], :include => {:responses => :answer},
+                            :lock => true)
+      return redirect_with_message(available_surveys_path, :notice,
+                                   t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
       saved = false
+
       ActiveRecord::Base.transaction do
-        saved = @response_set.update_attributes(:responses_attributes => ResponseSet.reject_or_destroy_blanks(params[:r]))
+        saved = @response_set.
+          update_attributes( { :responses_attributes =>
+                              ResponseSet.reject_or_destroy_blanks(params[:r])})
         @response_set.complete! if saved && params[:finish]
         saved &= @response_set.save
       end
+
       return redirect_with_message(surveyor_finish, :notice, t('surveyor.completed_survey')) if saved && params[:finish]
 
       respond_to do |format|
         format.html do
           flash[:notice] = t('surveyor.unable_to_update_survey') unless saved
-          redirect_to edit_my_survey_path(:anchor => anchor_from(params[:section]), :section => section_id_from(params[:section]))
+          redirect_to edit_my_survey_path(:anchor => anchor_from(params[:section]),
+                                          :section => section_id_from(params[:section]))
         end
+
         format.js do
           ids, remove, question_ids = {}, {}, []
           ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
@@ -80,7 +89,8 @@ module Surveyor
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]
           end
-          render :json => {"ids" => ids, "remove" => remove}.merge(@response_set.reload.all_dependencies(question_ids))
+          render :json => {"ids" => ids, "remove" => remove}.
+            merge(@response_set.reload.all_dependencies(question_ids))
         end
       end
     end
@@ -108,7 +118,7 @@ module Surveyor
     def surveyor_finish
       available_surveys_path
     end
-    
+
     def redirect_with_message(path, message_type, message)
       respond_to do |format|
         format.html do
