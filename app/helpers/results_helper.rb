@@ -9,9 +9,7 @@ module ResultsHelper
     elsif sets.size == 1
       (sets.first.string_value || sets.first.text_value || show_answer(sets.first))
     else
-      sets.collect do |set|
-        show_answer(set) + "<br/>"
-      end.join
+      show_answer( sets.sort_by {|a| a.id }.last )
     end
   end
 
