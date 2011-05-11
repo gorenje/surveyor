@@ -5,7 +5,7 @@
       %th Code
       - @questions.each do |question|
         - next if question.display_order == 1
-        %th= "[" +question.display_order.to_s + "]" + question.text
+        %th{:title => "#{question.text}"}= question.text.truncate(20)
   %tbody
     - @response_sets.each do |r_set|
       %tr.gradeA
@@ -14,9 +14,23 @@
         - @questions.each do |question|
           - next if question.display_order == 1
           %td!= display_response(r_set,question)
-%br/
-= link_to "Back", results_path
+  %tfoot
+    %tr
+      %td= ""
+      %td= ""
+      - @questions.each_with_index do |question,index|
+        - next if question.display_order == 1
+        %td{:title => "#{question.text}"}= ""
+
+%br
+%br
+%br
+
+= link_to "Back to Results", results_path
+
 :javascript
   $(document).ready(function(){
-    $('#results_list').dataTable();
+    $('#results_list').dataTable({
+      "sPaginationType": "full_numbers"
+    });
   });
