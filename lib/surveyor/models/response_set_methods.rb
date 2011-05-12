@@ -25,12 +25,13 @@ module Surveyor
         base.instance_eval do
           def reject_or_destroy_blanks(hash_of_hashes)
             result = {}
-            (hash_of_hashes || {}).each_pair do |k, hash|
+            (hash_of_hashes || {}).each_pair do |response_id, hash|
               hash = Response.applicable_attributes(hash)
+
               if has_blank_value?(hash)
-                result.merge!({k => hash.merge("_destroy" => "true")}) if hash.has_key?("id")
+                result.merge!({response_id => hash.merge("_destroy" => "true")}) if hash.has_key?("id")
               else
-                result.merge!({k => hash})
+                result.merge!({response_id => hash})
               end
             end
             result

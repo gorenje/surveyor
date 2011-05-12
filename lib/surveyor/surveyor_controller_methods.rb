@@ -63,17 +63,22 @@ module Surveyor
                             :lock => true)
       return redirect_with_message(available_surveys_path, :notice,
                                    t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
+      parameters_sanitized = ResponseSet.reject_or_destroy_blanks(params[:r])
       saved = false
-
-      ActiveRecord::Base.transaction do
+      if params[:finish]
+        ActiveRecord::Base.transaction do
+          saved = @response_set.
+            update_attributes( { :responses_attributes => parameters_sanitized })
+          @response_set.complete! if saved
+          saved &= @response_set.save
+        end
+      else
         saved = @response_set.
-          update_attributes( { :responses_attributes =>
-                              ResponseSet.reject_or_destroy_blanks(params[:r])})
-        @response_set.complete! if saved && params[:finish]
-        saved &= @response_set.save
+          update_attributes( { :responses_attributes => parameters_sanitized })
       end
 
-      return redirect_with_message(surveyor_finish, :notice, t('surveyor.completed_survey')) if saved && params[:finish]
+      return redirect_with_message(surveyor_finish, :notice,
+                                   t('surveyor.completed_survey')) if saved && params[:finish]
 
       respond_to do |format|
         format.html do
@@ -84,11 +89,14 @@ module Surveyor
 
         format.js do
           ids, remove, question_ids = {}, {}, []
-          ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
-            ids[k] = @response_set.responses.find(:first, :conditions => v).id if !v.has_key?("id")
+          parameters_sanitized.each do |k,v|
+            ids[k] = @response_set.responses.
+              find(:first, :conditions => v).id unless v.has_key?("id")
+
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]
           end
+
           render :json => {"ids" => ids, "remove" => remove}.
             merge(@response_set.reload.all_dependencies(question_ids))
         end
