@@ -67,12 +67,14 @@ module Surveyor
       saved = false
       if params[:finish]
         ActiveRecord::Base.transaction do
+          @response_set.responses.where("question_id" => parameters_sanitized.values.map{|r| r["question_id"]}.flatten.uniq).each{ |r| r.destroy }
           saved = @response_set.
             update_attributes( { :responses_attributes => parameters_sanitized })
           @response_set.complete! if saved
           saved &= @response_set.save
         end
       else
+        @response_set.responses.where("question_id" => parameters_sanitized.values.map{|r| r["question_id"]}.flatten.uniq).each{ |r| r.destroy }
         saved = @response_set.
           update_attributes( { :responses_attributes => parameters_sanitized })
       end
