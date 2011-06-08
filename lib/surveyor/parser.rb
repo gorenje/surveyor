@@ -1,4 +1,3 @@
-%w(survey survey_section question_group question dependency dependency_condition answer validation validation_condition).each {|model| require model }
 module Surveyor
   class Parser
     # Attributes
@@ -296,3 +295,4 @@ class ValidationCondition < ActiveRecord::Base
                                       :rule_key => reference_identifier}.merge(a1 || {}))
   end
 end
+%w(survey survey_section question_group question dependency dependency_condition answer validation validation_condition).each {|model| require model }
