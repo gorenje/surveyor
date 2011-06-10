@@ -63,20 +63,20 @@ module Surveyor
                             :lock => true)
       return redirect_with_message(available_surveys_path, :notice,
                                    t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
+
+      question_ids = params[:r].values.map{|r| r["question_id"]}.flatten.uniq
       parameters_sanitized = ResponseSet.reject_or_destroy_blanks(params[:r])
       saved = false
-      if params[:finish]
-        ActiveRecord::Base.transaction do
-          @response_set.responses.where("question_id" => parameters_sanitized.values.map{|r| r["question_id"]}.flatten.uniq).each{ |r| r.destroy }
-          saved = @response_set.
-            update_attributes( { :responses_attributes => parameters_sanitized })
+
+      ActiveRecord::Base.transaction do
+        # ensure that all answers for the submitted questions are removed even if there are no new answers
+        @response_set.responses.where("question_id" => question_ids).each{ |r| r.destroy }
+        saved = @response_set.update_attributes( { :responses_attributes => parameters_sanitized })
+
+        if params[:finish]
           @response_set.complete! if saved
           saved &= @response_set.save
         end
-      else
-        @response_set.responses.where("question_id" => parameters_sanitized.values.map{|r| r["question_id"]}.flatten.uniq).each{ |r| r.destroy }
-        saved = @response_set.
-          update_attributes( { :responses_attributes => parameters_sanitized })
       end
 
       return redirect_with_message(surveyor_finish, :notice,
@@ -90,13 +90,12 @@ module Surveyor
         end
 
         format.js do
-          ids, remove, question_ids = {}, {}, []
+          ids, remove = {}, {}
           parameters_sanitized.each do |k,v|
             ids[k] = @response_set.responses.
               find(:first, :conditions => v).id unless v.has_key?("id")
 
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
-            question_ids << v["question_id"]
           end
 
           render :json => {"ids" => ids, "remove" => remove}.
