@@ -66,12 +66,14 @@ module Surveyor
 
       question_ids = params[:r].values.map{|r| r["question_id"]}.flatten.uniq
       parameters_sanitized = ResponseSet.reject_or_destroy_blanks(params[:r])
+      answer_ids = parameters_sanitized.values.map{|r| r[:id].blank? ? nil : r[:answer_id] }.flatten.compact.uniq.map{|a| a.to_i}
       saved = false
 
       ActiveRecord::Base.transaction do
         # ensure that all answers for the submitted questions are removed even if there are no new answers
-        @response_set.responses.where("question_id" => question_ids).each{ |r| r.destroy }
-        saved = @response_set.update_attributes( { :responses_attributes => parameters_sanitized })
+
+        @response_set.responses.where("question_id" => question_ids).reject{|r| answer_ids.include? r.answer_id}.each{ |r| r.destroy }
+        saved = @response_set.update_attributes( { :responses_attributes => parameters_sanitized.reject{|k,v| v.has_key?("_destroy") } })
 
         if params[:finish]
           @response_set.complete! if saved
