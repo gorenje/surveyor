@@ -14,6 +14,9 @@ begin
     gem.add_dependency 'formtastic'
     gem.add_dependency 'uuid'
     gem.add_development_dependency "yard", ">= 0"
+    gem.add_development_dependency "rake"
+    gem.add_development_dependency "rspec"
+    gem.add_development_dependency "jeweler"
   end
   Jeweler::GemcutterTasks.new
 
