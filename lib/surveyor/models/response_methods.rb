@@ -15,6 +15,9 @@ module Surveyor
         end
         base.send :include, Surveyor::ActsAsResponse # includes "as" instance method
 
+        # survey_section_id
+        base.send :before_save, Proc.new{ |r| r.survey_section_id = r.question.survey_section_id if( r.question ) }
+
         # Class methods
         base.instance_eval do
           def applicable_attributes(attrs)
